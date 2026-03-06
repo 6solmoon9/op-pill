@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PILL_VERSE — Bitcoin NFT &amp; P2E Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <div class="scanlines"></div>
+  <div class="bg-overlays"></div>
+
+  <!-- ═══════════════════════════════════ HEADER ══════════════════════════════════ -->
+  <header id="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-text">PILL_VERSE</span>
+      </div>
+      <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <a href="#hero"        class="nav-link active">HOME</a>
+        <a href="#game"        class="nav-link">PLAY</a>
+        <a href="#mint"        class="nav-link">MINT</a>
+        <a href="#leaderboard" class="nav-link">LEADERBOARD</a>
+        <a href="#rarity"      class="nav-link">RARITY</a>
+        <a href="#roadmap"     class="nav-link">ROADMAP</a>
+        <button class="nav-link nav-link--btn" id="btn-lightpaper">LIGHTPAPER</button>
+      </nav>
+      <div class="header-right">
+        <div class="network-toggle" role="group" aria-label="Network selector">
+          <button class="net-btn active" id="btn-testnet"><span class="net-dot" id="net-dot"></span>REGTEST</button>
+          <button class="net-btn locked" id="btn-mainnet" title="Mainnet launches soon. Stay tuned.">MAINNET 🔒</button>
+        </div>
+        <div class="mint-counter">MINT: <span id="minted-count">0</span> / 5000</div>
+        <div class="net-status"><span class="net-status-dot"></span><span class="net-status-label">OP_NET / Bitcoin</span></div>
+        <button class="btn-wallet" id="btn-wallet">CONNECT WALLET</button>
+        <button class="btn-dashboard nav-dashboard" id="btn-dashboard-header" style="display:none;">DASHBOARD</button>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════ GAME SECTION ═══════════════════════════ -->
+  <section id="game" class="section-game">
+    <h2 class="section-title">PILL_VERSE <span class="title-badge">P2E</span></h2>
+    <p class="section-game-sub-title">PILL_CATCHER &times; OP_PILL</p>
+    <p class="section-sub">Catch ₿ Bitcoin &middot; Dodge 🦠 Viruses &middot; Earn Points</p>
+    <div class="game-preview-stats">
+      <div class="gps-item"><span class="gps-label">DAILY POT</span><span class="gps-val" id="preview-pot">$0.00</span></div>
+      <div class="gps-item"><span class="gps-label">TOP SCORE</span><span class="gps-val" id="preview-top">—</span></div>
+      <div class="gps-item"><span class="gps-label">YOUR BEST</span><span class="gps-val" id="preview-best">0</span></div>
+    </div>
+    <button class="btn-primary btn-launch-game" id="btn-launch-game">&#9654; PLAY NOW</button>
+  </section>
+
+  <!-- ═══════════════════════════════ LEADERBOARD SECTION ════════════════════════ -->
+  <section id="leaderboard" class="section-leaderboard">
+    <div class="leaderboard-grid">
+
+      <!-- Daily Prize Pool -->
+      <div class="prize-pool-card">
+        <div class="pool-label">DAILY PRIZE POOL</div>
+        <div class="pool-amount" id="pool-amount">$0.00</div>
+        <div class="pool-sub">95% of all ticket purchases</div>
+        <div class="pool-timer">RESETS IN: <span id="pool-timer">23:59:59</span></div>
+        <div class="pool-breakdown">
+          <div>🥇 1st Place: <span id="prize-1st">$0.00</span></div>
+          <div>🥈 2nd Place: <span id="prize-2nd">$0.00</span></div>
+          <div>🥉 3rd Place: <span id="prize-3rd">$0.00</span></div>
+          <div>Top 20%: share remaining pot</div>
+        </div>
+        <div class="pool-note">NFT Holders &middot; Tournament &middot; Participation Pool</div>
+      </div>
+
+      <!-- Leaderboard Table -->
+      <div class="leaderboard-card">
+        <div class="lb-header">
+          <span>TOP PLAYERS TODAY</span>
+          <span class="lb-refresh" id="lb-refresh">&#8635; LIVE</span>
+        </div>
+        <table class="lb-table" id="lb-table">
+          <thead>
+            <tr><th>#</th><th>WALLET</th><th>NFT</th><th>TICKET</th><th>SCORE</th><th>PRIZE</th></tr>
+          </thead>
+          <tbody id="lb-body">
+            <!-- filled by leaderboard.js -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ HERO SECTION ═══════════════════════════ -->
+  <section id="hero" class="section-hero">
+    <div class="hero-particles" id="hero-particles"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">GENESIS LUCK: THE OP_PILL NFT</h1>
+      <p class="hero-sub">5,000 pharmaceutical NFTs on Bitcoin.<br>All 5,000 available to mint now.</p>
+      <div class="hero-badge" id="hero-badge">🟡 RUNNING ON REGTEST</div>
+      <button class="btn-primary btn-mint-cta" id="btn-hero-mint">MINT NOW</button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ RARITY SECTION ═════════════════════════ -->
+  <section id="rarity" class="section-rarity">
+    <h2 class="section-title">RARITY TIERS</h2>
+    <div class="rarity-grid" id="rarity-grid"></div>
+  </section>
+
+  <!-- ═══════════════════════════════════ MINT SECTION ═══════════════════════════ -->
+  <section id="mint" class="section-mint">
+    <div class="mint-panel">
+      <div class="mint-net-badge" id="mint-net-badge">● REGTEST</div>
+      <h2 class="mint-title">MINT OP_PILL</h2>
+      <div class="mint-available">AVAILABLE: <span id="mint-available">5000</span> / 5000</div>
+      <div class="mint-price">0.0005 <span class="price-unit">BTC</span></div>
+      <div class="mint-qty-wrap">
+        <button class="qty-btn" id="qty-minus" aria-label="Decrease quantity">−</button>
+        <span class="qty-display" id="qty-display">1</span>
+        <button class="qty-btn" id="qty-plus" aria-label="Increase quantity">+</button>
+      </div>
+      <div class="mint-totals">
+        <div class="total-row"><span>Total Cost</span><span id="total-cost">0.0005 BTC</span></div>
+        <div class="total-row"><span>Est. Gas Fee</span><span>~0.00001 BTC</span></div>
+        <div class="total-row total-final"><span>TOTAL</span><span id="total-final">0.00051 BTC</span></div>
+      </div>
+      <button class="btn-primary btn-mint" id="btn-mint-main">MINT NOW</button>
+      <button class="btn-secondary btn-lucky" id="btn-lucky">🎲 LUCKY RANDOM MINT</button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ ROADMAP ═════════════════════════════════ -->
+  <section id="roadmap" class="section-roadmap">
+    <h2 class="section-title">ROADMAP</h2>
+    <div class="roadmap-track" id="roadmap-track"></div>
+  </section>
+
+  <!-- ═══════════════════════════════════ FOOTER ══════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-logo">PILL_VERSE</span>
+      <span class="footer-copy">&copy; 2025 PILL_VERSE. All rights reserved. Not financial advice.</span>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════ GAME OVERLAY ═══════════════════════════════ -->
+  <div id="game-overlay" style="display:none;">
+    <div class="scanlines"></div>
+
+    <!-- Game header -->
+    <div class="game-overlay-header">
+      <div class="logo"><span class="logo-text">PILL_VERSE</span></div>
+      <span class="game-overlay-title">PILL_CATCHER</span>
+      <button class="btn-exit-game" id="btn-exit-game">&#10005; EXIT</button>
+    </div>
+
+    <!-- HUD top-left: score / level / combo -->
+    <div id="hud-left" style="display:none;">
+      <div class="hud-corner-item">
+        <span class="hud-corner-label">SCORE</span>
+        <span class="hud-corner-val" id="score-val">0</span>
+      </div>
+      <div class="hud-corner-row">
+        <div class="hud-corner-item hud-corner-item--small">
+          <span class="hud-corner-label">LEVEL</span>
+          <span class="hud-corner-val hud-corner-val--small" id="level-val">1</span>
+        </div>
+        <div class="hud-corner-item hud-corner-item--small">
+          <span class="hud-corner-label">COMBO</span>
+          <span class="hud-corner-val hud-corner-val--small" id="combo-val">x1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HUD top-right: lives -->
+    <div id="hud-right" style="display:none;">
+      <span class="hud-corner-label">LIVES</span>
+      <div id="lives-display"></div>
+    </div>
+
+    <!-- ── LOBBY SCREEN ── -->
+    <div id="game-lobby" style="display:none;">
+      <h2 class="lobby-title">PILL_CATCHER</h2>
+      <p class="lobby-sub">Catch Bitcoin. Dodge Viruses. Earn Rewards.</p>
+
+      <div class="lobby-nft-row">
+        <span class="lobby-label">YOUR NFT:</span>
+        <span class="lobby-nft-badge" id="lobby-nft-label">NO NFT</span>
+        <span class="lobby-bonus"><span id="lobby-nft-lives">1</span> lives &middot; <span id="lobby-nft-mult">x1.0</span> multiplier</span>
+      </div>
+      <div class="lobby-hiscore-row">
+        <span class="lobby-label">YOUR BEST:</span>
+        <span class="lobby-hiscore-val" id="lobby-hiscore">0</span>
+        &nbsp;&nbsp;
+        <span class="lobby-label">DAILY POT:</span>
+        <span class="lobby-pot-val" id="lobby-pot">$0.00</span>
+      </div>
+
+      <div class="lobby-nft-table">
+        <table>
+          <thead><tr><th>NFT</th><th>LIVES</th><th>MULTIPLIER</th><th>MINT CHANCE</th></tr></thead>
+          <tbody>
+            <tr><td class="nft-none">NO NFT</td><td>1</td><td>x1.0</td><td>—</td></tr>
+            <tr><td class="nft-common">COMMON</td><td>2</td><td>x1.2</td><td>70%</td></tr>
+            <tr><td class="nft-rare">RARE</td><td>3</td><td>x2.5</td><td>20%</td></tr>
+            <tr><td class="nft-mythical">MYTHICAL</td><td>5</td><td>x6.0</td><td>10%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ticket-select">
+        <div class="ticket-label">SELECT ENTRY TIER:</div>
+        <div class="ticket-row">
+          <button class="ticket-btn selected" data-tier="bronze">
+            <span class="ticket-name">BRONZE</span>
+            <span class="ticket-price">$0.10</span>
+            <span class="ticket-mult">x1</span>
+          </button>
+          <button class="ticket-btn" data-tier="silver">
+            <span class="ticket-name">SILVER</span>
+            <span class="ticket-price">$1.00</span>
+            <span class="ticket-mult">x2</span>
+          </button>
+          <button class="ticket-btn" data-tier="gold">
+            <span class="ticket-name">GOLD</span>
+            <span class="ticket-price">$10.00</span>
+            <span class="ticket-mult">x5</span>
+          </button>
+        </div>
+        <p class="ticket-note">Demo mode — no real payment required</p>
+      </div>
+
+      <button class="btn-primary btn-start-game" id="btn-start-game">&#9654; START GAME</button>
+    </div>
+
+    <!-- ── ACTIVE GAME AREA ── -->
+    <div id="game-area" style="display:none; flex-direction:column; align-items:center; gap:10px;">
+
+      <!-- Canvas -->
+      <canvas id="game-canvas" width="700" height="520"></canvas>
+
+      <!-- Bottom info -->
+      <div id="game-bottom-panel">
+        <div class="game-nft-status" id="game-nft-status">💊 NO NFT · x1.0</div>
+        <div class="game-ticket-info" id="game-ticket-info">BRONZE · $0.1 · x1</div>
+        <div class="game-pot-info">POT: <span id="pot-val">$0.00</span></div>
+      </div>
+    </div>
+
+    <!-- ── GAME OVER SCREEN ── -->
+    <div id="game-over-screen" style="display:none;">
+      <h2 class="go-title">GAME OVER</h2>
+      <div class="go-score-big" id="go-score">0</div>
+      <div class="go-label">FINAL SCORE</div>
+      <div id="go-leaderboard-notice" class="go-lb-notice" style="display:none;">
+        🏆 YOU MADE THE LEADERBOARD!
+      </div>
+      <div class="go-stats-grid">
+        <div class="go-stat"><span class="go-stat-label">HIGH SCORE</span><span class="go-stat-val" id="go-high">0</span></div>
+        <div class="go-stat"><span class="go-stat-label">COINS</span><span class="go-stat-val" id="go-coins">0</span></div>
+        <div class="go-stat"><span class="go-stat-label">LEVEL</span><span class="go-stat-val" id="go-level">1</span></div>
+        <div class="go-stat"><span class="go-stat-label">NFT</span><span class="go-stat-val" id="go-nft">NO NFT</span></div>
+        <div class="go-stat"><span class="go-stat-label">TICKET</span><span class="go-stat-val" id="go-ticket">BRONZE</span></div>
+      </div>
+      <div class="go-actions">
+        <button class="btn-primary"   id="btn-play-again">&#9654; PLAY AGAIN</button>
+        <button class="btn-secondary" id="btn-go-mint">💊 MINT NFT</button>
+      </div>
+    </div>
+
+  </div><!-- /game-overlay -->
+
+  <!-- ═══════════════════════════════ EXISTING MODALS ════════════════════════════ -->
+  <div class="modal-overlay" id="modal-wallet" role="dialog" aria-modal="true" aria-labelledby="mw-title">
+    <div class="modal-box">
+      <button class="modal-close" data-close="modal-wallet" aria-label="Close">✕</button>
+      <h2 id="mw-title" class="modal-title">CONNECT BITCOIN WALLET</h2>
+      <div class="wallet-options" id="wallet-options"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-confirm" role="dialog" aria-modal="true" aria-labelledby="mc-title">
+    <div class="modal-box modal-confirm-box">
+      <button class="modal-close" data-close="modal-confirm" aria-label="Close">✕</button>
+      <h2 id="mc-title" class="modal-title">CONFIRM TRANSACTION</h2>
+      <div class="confirm-net-badge" id="confirm-net-badge">REGTEST</div>
+      <table class="confirm-table" id="confirm-table"></table>
+      <div class="tos-box" id="tos-box" tabindex="0"></div>
+      <label class="tos-check-label"><input type="checkbox" id="tos-check" /> I have read and agree to the Terms of Service</label>
+      <div class="confirm-actions">
+        <button class="btn-secondary" data-close="modal-confirm">CANCEL</button>
+        <button class="btn-primary" id="btn-sign-mint" disabled>SIGN &amp; MINT</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-processing" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <h2 class="modal-title">BROADCASTING TRANSACTION...</h2>
+      <div class="proc-net-label">Network: <span id="proc-network">REGTEST</span></div>
+      <div class="proc-spinner"></div>
+      <div class="proc-status" id="proc-status">Signing...</div>
+      <div class="proc-bar-wrap"><div class="proc-bar" id="proc-bar"></div></div>
+      <div class="proc-txid" id="proc-txid" style="display:none"></div>
+      <div class="proc-note">Please do not close this window</div>
+      <a class="proc-explorer-link" id="proc-explorer-link" target="_blank" rel="noopener" style="display:none">View on Explorer →</a>
+    </div>
+  </div>
+
+  <div class="modal-overlay modal-fullscreen" id="modal-unbox" role="dialog" aria-modal="true">
+    <div class="unbox-inner">
+      <div id="unbox-phase-a">
+        <canvas id="em-canvas" width="300" height="300"></canvas>
+        <div class="unbox-opening-text">OPENING CAPSULE<span class="dot-anim">...</span></div>
+      </div>
+      <div id="unbox-phase-b" style="display:none">
+        <div class="confetti-burst" id="confetti-burst"></div>
+        <div class="rarity-reveal-badge" id="reveal-rarity-badge"></div>
+        <div class="reveal-img-wrap"><img class="reveal-img" id="reveal-img" src="" alt="Minted NFT" /></div>
+        <h2 class="reveal-rarity-name" id="reveal-rarity-name"></h2>
+        <p class="reveal-rarity-desc" id="reveal-rarity-desc"></p>
+        <div class="reveal-token-id" id="reveal-token-id"></div>
+        <div class="reveal-txhash" id="reveal-txhash"></div>
+        <div class="reveal-net-badge">MINTED ON REGTEST</div>
+        <div class="unbox-actions">
+          <button class="btn-secondary" id="btn-share-x">SHARE ON X (TWITTER)</button>
+          <button class="btn-secondary" id="btn-view-explorer">VIEW ON EXPLORER</button>
+          <button class="btn-primary"   id="btn-mint-another">MINT ANOTHER</button>
+          <button class="btn-secondary" id="btn-unbox-close">CLOSE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-funds" role="dialog" aria-modal="true">
+    <div class="modal-box modal-error-box">
+      <button class="modal-close" data-close="modal-funds" aria-label="Close">✕</button>
+      <div class="funds-icon">⚠</div>
+      <h2 class="modal-title error-title">INSUFFICIENT FUNDS</h2>
+      <div class="funds-net-badge">REGTEST</div>
+      <p class="funds-msg" id="funds-msg"></p>
+      <div class="funds-errcode">ERR_BALANCE_0x03</div>
+      <p class="funds-suggestion">Top up your regtest wallet. Mine a block locally to generate regtest BTC.</p>
+      <a class="funds-faucet-link" href="http://localhost:8080" target="_blank" rel="noopener">Regtest Explorer → localhost:8080</a>
+      <button class="btn-primary" data-close="modal-funds">DISMISS</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-mismatch" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <h2 class="modal-title">NETWORK MISMATCH</h2>
+      <p class="mismatch-msg" id="mismatch-msg"></p>
+      <div class="confirm-actions">
+        <button class="btn-secondary" data-close="modal-mismatch">CANCEL</button>
+        <button class="btn-primary" id="btn-switch-network">SWITCH NETWORK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ ADMIN MODAL (hidden) ═══════════════════════ -->
+  <div id="modal-admin" class="modal-overlay" style="display:none; z-index:9999;">
+    <div class="modal-box" style="max-width:480px;">
+      <div id="admin-pin-screen">
+        <h2 class="modal-title" style="color:#FFD700;">&#9881; OWNER ACCESS</h2>
+        <input type="password" id="admin-pin" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+               maxlength="6" style="width:100%;text-align:center;letter-spacing:8px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,215,0,0.3);color:#FFD700;padding:14px;font-family:var(--font-head);font-size:18px;margin:16px 0;" />
+        <button class="btn-primary" id="admin-pin-btn" style="width:100%;">ENTER</button>
+      </div>
+      <div id="admin-dashboard" style="display:none;">
+        <button class="modal-close" id="admin-close">✕</button>
+        <h2 class="modal-title" style="color:#FFD700;">&#9881; OWNER DASHBOARD</h2>
+        <div style="background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.3);padding:20px;margin:16px 0;">
+          <div style="font-size:11px;letter-spacing:3px;color:rgba(255,215,0,0.6);">YOUR DEV FEE (5%)</div>
+          <div style="font-size:36px;font-family:var(--font-head);color:#FFD700;" id="admin-fee-amount">$0.00</div>
+          <div style="font-size:12px;color:rgba(255,215,0,0.4);" id="admin-fee-btc">&#8776; 0.00000000 BTC</div>
+          <button class="btn-primary" id="admin-withdraw" style="margin-top:12px;">WITHDRAW TO MY WALLET</button>
+        </div>
+        <table style="width:100%;font-size:12px;border-collapse:collapse;">
+          <tr><td style="padding:6px 0;color:rgba(0,255,255,0.5);">Total collected today</td><td id="admin-total" style="text-align:right;color:#00FFFF;">$0.00</td></tr>
+          <tr><td style="padding:6px 0;color:rgba(0,255,255,0.5);">Total games today</td><td id="admin-games" style="text-align:right;color:#00FFFF;">0</td></tr>
+          <tr><td style="padding:6px 0;color:rgba(0,255,255,0.5);">Active players</td><td id="admin-players" style="text-align:right;color:#00FFFF;">0</td></tr>
+          <tr><td style="padding:6px 0;color:rgba(0,255,255,0.5);">Bronze / Silver / Gold</td><td id="admin-entries" style="text-align:right;color:#00FFFF;">0/0/0</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ DASHBOARD MODAL ══════════════════════════════ -->
+  <div class="modal-overlay" id="modal-dashboard" role="dialog" aria-modal="true" aria-labelledby="mdash-title">
+    <div class="modal-box dashboard-box">
+      <button class="modal-close" data-close="modal-dashboard" aria-label="Close">&#10005;</button>
+      <h2 id="mdash-title" class="modal-title">PLAYER DASHBOARD</h2>
+
+      <!-- Wallet + NFT -->
+      <div class="dash-wallet-info">
+        <span class="dash-address" id="dash-address">—</span>
+        <span class="dash-nft-badge nft-none" id="dash-nft-badge">NO NFT</span>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="dash-stats-grid">
+        <div class="dash-stat">
+          <div class="dash-stat-label">GAMES TODAY</div>
+          <div class="dash-stat-val" id="dash-games">0</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-label">BEST SCORE</div>
+          <div class="dash-stat-val" id="dash-best-score">0</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-label">TOTAL SPENT</div>
+          <div class="dash-stat-val" id="dash-spent">$0.00</div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-label">RANK TODAY</div>
+          <div class="dash-stat-val" id="dash-rank">#—</div>
+        </div>
+      </div>
+
+      <!-- Pending Rewards -->
+      <div class="dash-rewards">
+        <h3 class="dash-rewards-title">PENDING REWARDS</h3>
+
+        <div class="dash-reward-row">
+          <div class="dash-reward-info">
+            <span class="dash-reward-label">🏆 Tournament Prize</span>
+            <span class="dash-accumulated-since" id="acc-since-tournament" style="display:none;"></span>
+          </div>
+          <span class="dash-reward-amount" id="reward-tournament">$0.00</span>
+          <button class="btn-claim" id="claim-tournament" disabled>CLAIM</button>
+        </div>
+
+        <div class="dash-reward-row">
+          <div class="dash-reward-info">
+            <span class="dash-reward-label">💊 NFT Holder Bonus</span>
+            <span class="dash-accumulated-since" id="acc-since-nft_bonus" style="display:none;"></span>
+          </div>
+          <span class="dash-reward-amount" id="reward-nft">$0.00</span>
+          <button class="btn-claim" id="claim-nft" disabled>CLAIM</button>
+        </div>
+
+        <div class="dash-reward-row">
+          <div class="dash-reward-info">
+            <span class="dash-reward-label">👥 Participation Reward</span>
+            <span class="dash-accumulated-since" id="acc-since-participation" style="display:none;"></span>
+          </div>
+          <span class="dash-reward-amount" id="reward-participation">$0.00</span>
+          <button class="btn-claim" id="claim-participation" disabled>CLAIM</button>
+        </div>
+
+        <div class="dash-total-row">
+          <span class="dash-total-label">TOTAL ACCUMULATED</span>
+          <span class="dash-total-val" id="dash-total-pending">$0.00</span>
+        </div>
+      </div>
+
+      <!-- Claim History -->
+      <div class="dash-history">
+        <h3 class="dash-history-title">CLAIM HISTORY</h3>
+        <table class="dash-history-table">
+          <thead><tr><th>DATE</th><th>TYPE</th><th>AMOUNT</th><th>TX</th></tr></thead>
+          <tbody id="dash-history-body"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ LIGHTPAPER OVERLAY ══════════════════════ -->
+  <div id="lightpaper-overlay" style="display:none;">
+    <div class="scanlines"></div>
+    <button class="btn-exit-game" id="btn-close-lightpaper">&#10005; CLOSE</button>
+    <div class="lp-scroll">
+      <div class="lp-body" id="lp-body"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ TOAST ═══════════════════════════════════ -->
+  <div class="toast-container" id="toast-container" role="region" aria-live="polite"></div>
+
+  <!-- ═══════════════════════════════════ SCRIPTS ═════════════════════════════════ -->
+  <script>
+  // ── LIGHTPAPER ──────────────────────────────────────────────
+  (function () {
+    const CONTENT = `# PILL_VERSE — Lightpaper v1.0
+
+## What is PILL_VERSE?
+PILL_VERSE is a Bitcoin-native Play-to-Earn (P2E) platform built on OP_NET (Bitcoin L1). It combines NFT minting, a skill-based arcade game (PILL_CATCHER), and a daily prize distribution system — all powered by real BTC.
+
+## The NFT Collection: OP_PILL
+- Total Supply: 5,000 NFTs
+- Mint Price: 0.0005 BTC per NFT
+- Network: Bitcoin L1 via OP_NET (Testnet → Mainnet Q2 2026)
+- Mint is 100% random and provably fair
+- Rarities: COMMON (70%) / RARE (20%) / MYTHICAL (10%)
+
+## NFT Benefits in Game
+| Rarity | Lives | Score Multiplier | Bonus Pool Share |
+|--------|-------|-----------------|-----------------|
+| No NFT | 1 | x1.0 | None |
+| COMMON | 2 | x1.2 | 1 share |
+| RARE | 3 | x2.5 | 2.5 shares |
+| MYTHICAL | 5 | x6.0 | 6 shares |
+
+## The Game: PILL_CATCHER
+PILL_CATCHER is a skill-based arcade game where players control a pill capsule character.
+
+### How to Play
+1. Connect your Bitcoin wallet (OP_Wallet / UniSat / OKX)
+2. Choose your Entry Fee tier before starting
+3. Catch falling Bitcoin icons to earn points
+4. Dodge falling viruses — each hit costs one life
+5. Build combos by catching consecutive Bitcoins
+6. Game ends when all lives are lost
+
+### Score Formula
+Final Score = Coins × Entry Multiplier × NFT Multiplier × Combo
+
+### Entry Fee Tiers
+| Tier | Cost | Score Multiplier |
+|------|------|-----------------|
+| BRONZE | $0.10 in BTC | x1 |
+| SILVER | $1.00 in BTC | x10 |
+| GOLD | $10.00 in BTC | x100 |
+
+## Daily Prize Distribution
+Every 24 hours at 00:00 UTC, the entire daily treasury is distributed:
+
+| Recipient | Share | Condition |
+|-----------|-------|-----------|
+| 🥇 1st Place | 15% | Highest score of the day |
+| 🥈 2nd Place | 10% | — |
+| 🥉 3rd Place | 8% | — |
+| 4th Place | 7% | — |
+| 💊 NFT Holders | 25% | Hold any OP_PILL NFT |
+| 👥 Participation | 20% | Play 10+ paid games in a day |
+| 🔄 Liquidity | 10% | NFT marketplace support |
+
+## Reward Rules
+- Rewards never expire — they accumulate in your dashboard until claimed
+- NFT Holder bonus requires NFT to be in wallet at time of CLAIM
+- Participation pool requires minimum 10 paid games in a single day
+- All rewards are claimed manually via the Player Dashboard
+
+## How to Get Started
+1. Install OP_Wallet Chrome extension from opnet.org
+2. Create a wallet and switch to Testnet network
+3. Get testnet BTC from a faucet
+4. Visit PILL_VERSE and click CONNECT WALLET
+5. Mint an OP_PILL NFT for bonus multipliers (optional)
+6. Click PLAY NOW and select your entry fee
+7. Play, earn points, climb the leaderboard
+8. Claim your daily rewards in the Dashboard
+
+## Security & Fair Play
+- All scores validated server-side via Supabase
+- Wallet signature required for every score submission
+- Anti-cheat: scores exceeding physical maximum are rejected
+- 3 warnings = permanent wallet ban from rewards
+- Mint randomness uses crypto.getRandomValues() — cannot be influenced by anyone
+
+## Roadmap
+- Q1 2026: Testnet launch, PILL_CATCHER game, NFT minting ✓
+- Q2 2026: Mainnet launch, real BTC rewards, Supabase leaderboard
+
+## Supported Wallets
+- OP_Wallet (Recommended) — opnet.org/wallet
+- UniSat Wallet — unisat.io
+- OKX Wallet — okx.com/web3`;
+
+    function mdToHtml(md) {
+      const lines = md.split('\n');
+      const out = [];
+      let inTable = false, inList = false, inOl = false;
+
+      function closeBlocks() {
+        if (inTable)  { out.push('</tbody></table>'); inTable = false; }
+        if (inList)   { out.push('</ul>'); inList = false; }
+        if (inOl)     { out.push('</ol>'); inOl = false; }
+      }
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        // Headings
+        if (/^### /.test(line)) { closeBlocks(); out.push('<h3>' + esc(line.slice(4)) + '</h3>'); continue; }
+        if (/^## /.test(line))  { closeBlocks(); out.push('<h2>' + esc(line.slice(3)) + '</h2>'); continue; }
+        if (/^# /.test(line))   { closeBlocks(); out.push('<h1>' + esc(line.slice(2)) + '</h1>'); continue; }
+
+        // Table row
+        if (/^\|/.test(line)) {
+          const cells = line.split('|').slice(1, -1).map(c => c.trim());
+          if (/^[\s|:-]+$/.test(line)) continue; // separator row
+          if (!inTable) {
+            closeBlocks();
+            out.push('<table><thead><tr>' + cells.map(c => '<th>' + esc(c) + '</th>').join('') + '</tr></thead><tbody>');
+            inTable = true;
+          } else {
+            out.push('<tr>' + cells.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>');
+          }
+          continue;
+        }
+        if (inTable) { out.push('</tbody></table>'); inTable = false; }
+
+        // Ordered list
+        if (/^\d+\. /.test(line)) {
+          if (inList) { out.push('</ul>'); inList = false; }
+          if (!inOl)  { out.push('<ol>'); inOl = true; }
+          out.push('<li>' + esc(line.replace(/^\d+\. /, '')) + '</li>');
+          continue;
+        }
+
+        // Unordered list
+        if (/^- /.test(line)) {
+          if (inOl) { out.push('</ol>'); inOl = false; }
+          if (!inList) { out.push('<ul>'); inList = true; }
+          out.push('<li>' + esc(line.slice(2)) + '</li>');
+          continue;
+        }
+
+        closeBlocks();
+
+        if (line.trim() === '') { out.push('<br>'); continue; }
+        out.push('<p>' + esc(line) + '</p>');
+      }
+      closeBlocks();
+      return out.join('\n');
+    }
+
+    function esc(s) {
+      // Bold **text**
+      return s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('lightpaper-overlay');
+      const body    = document.getElementById('lp-body');
+      const btnOpen = document.getElementById('btn-lightpaper');
+      const btnClose= document.getElementById('btn-close-lightpaper');
+      const canvas  = document.getElementById('matrix-canvas');
+
+      body.innerHTML = mdToHtml(CONTENT);
+
+      btnOpen.addEventListener('click', () => {
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        if (canvas) canvas.style.zIndex = '998';
+        overlay.querySelector('.lp-scroll').scrollTop = 0;
+      });
+
+      function close() {
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+        if (canvas) canvas.style.zIndex = '';
+      }
+      btnClose.addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.style.display !== 'none') close(); });
+    });
+  })();
+  </script>
+  <script src="game.js"></script>
+  <script src="leaderboard.js"></script>
+  <script src="app.js"></script>
+  <script src="supabase.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
