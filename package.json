@@ -1,0 +1,26 @@
+{
+  "name": "pill-verse-contracts",
+  "version": "1.0.0",
+  "description": "PILL_VERSE — OP_PILL NFT Collection smart contracts (OP_NET / Bitcoin L1)",
+  "private": true,
+  "scripts": {
+    "build":        "asc contracts/OPPill.ts --config asconfig.json --outFile build/OPPill.wasm --textFile build/OPPill.wat",
+    "build:debug":  "asc contracts/OPPill.ts --config asconfig.json --outFile build/OPPill.debug.wasm --debug",
+    "deploy":       "ts-node contracts/deploy.ts",
+    "deploy:testnet": "OPNET_NETWORK=testnet ts-node contracts/deploy.ts",
+    "deploy:mainnet": "OPNET_NETWORK=mainnet ts-node contracts/deploy.ts"
+  },
+  "dependencies": {
+    "@btc-vision/as-bignum":    "latest",
+    "@btc-vision/btc-runtime":  "^1.11.0-rc.9",
+    "@btc-vision/transaction":  "latest"
+  },
+  "devDependencies": {
+    "assemblyscript": "^0.27.0",
+    "ts-node":        "^10.9.2",
+    "typescript":     "^5.4.5"
+  },
+  "resolutions": {
+    "@btc-vision/btc-runtime": "^1.11.0-rc.9"
+  }
+}

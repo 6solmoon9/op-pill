@@ -1,0 +1,27 @@
+{
+  "targets": {
+    "release": {
+      "outFile": "build/OPPill.wasm",
+      "textFile": "build/OPPill.wat",
+      "sourceMap": false,
+      "optimizeLevel": 3,
+      "shrinkLevel": 1,
+      "converge": false,
+      "noAssert": false
+    },
+    "debug": {
+      "outFile": "build/OPPill.debug.wasm",
+      "textFile": "build/OPPill.debug.wat",
+      "sourceMap": true,
+      "debug": true
+    }
+  },
+  "options": {
+    "bindings": "esm",
+    "uncheckedBehavior": "never",
+    "runtime": "stub",
+    "exportRuntime": true,
+    "lib": ["node_modules/@btc-vision/btc-runtime/assembly"],
+    "use": ["abort=~lib/wasi/index/abort"]
+  }
+}
