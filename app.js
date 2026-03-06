@@ -345,6 +345,51 @@ function loadWalletState() {
   } catch { /* ignore */ }
 }
 
+// ─── DEMO CONNECT CONFIRMATION ─────────────────────────────
+
+function _demoConnectConfirm(address, balanceSats) {
+  return new Promise(resolve => {
+    const btc = (balanceSats / 1e8).toFixed(4);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'demo-confirm-overlay';
+    overlay.innerHTML = `
+      <div class="demo-confirm-box">
+        <div class="demo-confirm-badge">⚡ DEMO MODE</div>
+        <h3 class="demo-confirm-title">Connect Wallet</h3>
+        <p class="demo-confirm-sub">A simulated wallet will be created for this session.</p>
+        <div class="demo-confirm-row">
+          <span class="demo-confirm-label">ADDRESS</span>
+          <span class="demo-confirm-val demo-confirm-addr">${address}</span>
+        </div>
+        <div class="demo-confirm-row">
+          <span class="demo-confirm-label">BALANCE</span>
+          <span class="demo-confirm-val">${btc} BTC <span class="demo-confirm-note">(testnet)</span></span>
+        </div>
+        <div class="demo-confirm-row">
+          <span class="demo-confirm-label">NETWORK</span>
+          <span class="demo-confirm-val">Bitcoin Testnet</span>
+        </div>
+        <p class="demo-confirm-warn">⚠ Demo mode has limited features. No real BTC is used.</p>
+        <div class="demo-confirm-actions">
+          <button class="btn-secondary demo-confirm-cancel">CANCEL</button>
+          <button class="btn-primary  demo-confirm-ok">CONNECT</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(overlay);
+
+    const cleanup = (result) => {
+      overlay.remove();
+      resolve(result);
+    };
+
+    overlay.querySelector('.demo-confirm-ok').addEventListener('click',     () => cleanup(true));
+    overlay.querySelector('.demo-confirm-cancel').addEventListener('click', () => cleanup(false));
+    overlay.addEventListener('click', e => { if (e.target === overlay) cleanup(false); });
+  });
+}
+
 // ─── WALLET ADAPTERS ───────────────────────────────────────
 
 const ADAPTERS = {
@@ -414,8 +459,15 @@ const ADAPTERS = {
     label: 'DEMO',
     check() { return true; },
     async connect() {
-      const prefix = NETWORK_CONFIG[currentNetwork].addressPrefix;
-      return { address: fakeBtcAddress(prefix), balance: 500000, network: currentNetwork === 'mainnet' ? 'livenet' : 'testnet' };
+      const prefix  = NETWORK_CONFIG[currentNetwork].addressPrefix;
+      const address = fakeBtcAddress(prefix);
+      const balance = 500000;
+
+      // Show confirmation popup — resolves true on Confirm, false on Cancel
+      const confirmed = await _demoConnectConfirm(address, balance);
+      if (!confirmed) throw new Error('User cancelled demo connection.');
+
+      return { address, balance, network: currentNetwork === 'mainnet' ? 'livenet' : 'testnet' };
     },
     async sign() { return 'demo_sig_' + randHex(32); },
     async send() { return { txid: fakeTxHash() }; },

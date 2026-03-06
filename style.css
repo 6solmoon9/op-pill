@@ -1553,6 +1553,113 @@ img { max-width: 100%; display: block; }
 
 .lp-body strong { color: #fff; font-weight: 700; }
 
+/* ─── DEMO CONNECT CONFIRMATION ─────────────────────────── */
+.demo-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(3, 0, 10, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.demo-confirm-box {
+  background: linear-gradient(160deg, #0a0118 0%, #03000a 100%);
+  border: 1px solid rgba(0,255,255,0.25);
+  box-shadow: 0 0 40px rgba(0,255,255,0.1), 0 0 80px rgba(139,0,255,0.08);
+  border-radius: 12px;
+  padding: 32px 28px 24px;
+  width: min(440px, 92vw);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.demo-confirm-badge {
+  font-family: var(--font-head);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--neon-gold);
+  text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  text-align: center;
+}
+
+.demo-confirm-title {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 16px rgba(0,255,255,0.5);
+  text-align: center;
+  margin: 0;
+}
+
+.demo-confirm-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  text-align: center;
+  margin: 0;
+}
+
+.demo-confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(0,255,255,0.04);
+  border: 1px solid rgba(0,255,255,0.08);
+  border-radius: 6px;
+}
+
+.demo-confirm-label {
+  font-family: var(--font-head);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(0,255,255,0.5);
+  flex-shrink: 0;
+}
+
+.demo-confirm-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #fff;
+  text-align: right;
+  word-break: break-all;
+}
+
+.demo-confirm-addr {
+  font-size: 11px;
+  color: var(--neon-cyan);
+}
+
+.demo-confirm-note {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+}
+
+.demo-confirm-warn {
+  font-size: 12px;
+  color: var(--neon-gold);
+  text-align: center;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.demo-confirm-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.demo-confirm-actions .btn-primary,
+.demo-confirm-actions .btn-secondary {
+  flex: 1;
+}
+
 /* ── Lobby ── */
 
 #game-lobby {
