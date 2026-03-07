@@ -16,7 +16,7 @@ const NETWORK_CONFIG = {
     validNetworkIds:   ['testnet', 'opnetTestnet', 'signet'],
     explorerUrl:       'https://mempool.space/testnet/tx/',
     opnetExplorer:     'https://testnet.opnet.org/tx/',
-    contractAddress:   'YOUR_TESTNET_CONTRACT_ADDRESS',
+    contractAddress:   'opt1sqptpfn0j6t37cyhlx2anvrukyhcwdrl39qs60z06',
     recipientAddress:  'YOUR_TESTNET_BTC_ADDRESS',
     addressPrefix:     'tb1q',
     active:            true,
@@ -26,7 +26,7 @@ const NETWORK_CONFIG = {
     networkId:         'livenet',
     explorerUrl:       'https://mempool.space/tx/',
     opnetExplorer:     'https://opnet.org/tx/',
-    contractAddress:   'YOUR_MAINNET_CONTRACT_ADDRESS',
+    contractAddress:   'opt1sqptpfn0j6t37cyhlx2anvrukyhcwdrl39qs60z06',
     recipientAddress:  'YOUR_MAINNET_BTC_ADDRESS',
     addressPrefix:     'bc1q',
     active:            false,   // LOCKED — set true on mainnet launch
